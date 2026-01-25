@@ -1,0 +1,63 @@
+############################
+#   JAVA / MAVEN
+############################
+target/
+*.class
+*.jar
+*.war
+
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+############################
+#   SPRING BOOT
+############################
+logs/
+*.log
+*.pid
+
+############################
+#   IDEs
+############################
+
+## IntelliJ
+.idea/
+*.iml
+
+## Eclipse
+.project
+.classpath
+.settings/
+
+## VSCode
+.vscode/
+
+############################
+#   OS
+############################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+############################
+#   DOCKER
+############################
+**/.docker/
+
+############################
+#   ENV / CONFIG
+############################
+*.local
+application-local.yml
+application-test.yml
+
+############################
+#   TEST / COVERAGE
+############################
+jacoco.exec
+coverage/

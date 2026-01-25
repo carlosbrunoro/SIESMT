@@ -1,0 +1,6 @@
+CREATE TABLE regional
+(
+    id    SERIAL PRIMARY KEY,
+    nome  VARCHAR(100) NOT NULL UNIQUE,
+    ativo BOOLEAN      NOT NULL DEFAULT TRUE
+);

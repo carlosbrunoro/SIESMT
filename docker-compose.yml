@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: catalogo-musical-db
+    environment:
+      POSTGRES_DB: catalogo_musical
+      POSTGRES_USER: catalogo_user
+      POSTGRES_PASSWORD: catalogo_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - seplag_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  seplag_pgdata:
+    name: seplag_postgres_data

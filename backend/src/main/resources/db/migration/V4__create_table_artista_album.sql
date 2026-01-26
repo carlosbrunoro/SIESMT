@@ -1,8 +1,8 @@
 CREATE TABLE artista_album
 (
-    id         SERIAL PRIMARY KEY,
-    artista_id INTEGER NOT NULL,
-    album_id   INTEGER NOT NULL
+    id         BIGSERIAL PRIMARY KEY,
+    artista_id BIGSERIAL NOT NULL,
+    album_id   BIGSERIAL NOT NULL
 );
 
 ALTER TABLE artista_album

@@ -1,6 +1,6 @@
 CREATE TABLE usuario
 (
-    id        SERIAL PRIMARY KEY,
+    id        BIGSERIAL PRIMARY KEY,
     username  VARCHAR(100) NOT NULL UNIQUE,
     senha     VARCHAR(255) NOT NULL,
     status    VARCHAR(30)  NOT NULL,

@@ -1,6 +1,6 @@
 CREATE TABLE artista
 (
-    id        SERIAL PRIMARY KEY,
+    id        BIGSERIAL PRIMARY KEY,
     nome      VARCHAR(200) NOT NULL,
     tipo      VARCHAR(20)  NOT NULL,
     criado_em TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP

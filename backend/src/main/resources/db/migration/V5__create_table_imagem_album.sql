@@ -1,6 +1,6 @@
 CREATE TABLE imagem_album
 (
-    id        SERIAL PRIMARY KEY,
+    id        BIGSERIAL PRIMARY KEY,
     album_id  INTEGER      NOT NULL,
     url       VARCHAR(500) NOT NULL,
     criado_em TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,

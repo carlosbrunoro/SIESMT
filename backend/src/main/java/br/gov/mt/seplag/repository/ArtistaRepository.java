@@ -1,4 +1,4 @@
-﻿package br.gov.mt.seplag.repository;
+package br.gov.mt.seplag.repository;
 
 import br.gov.mt.seplag.entity.Artista;
 import br.gov.mt.seplag.repository.base.BaseRepository;
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ArtistaRepository extends BaseRepository<Artista, Integer> {
+public interface ArtistaRepository extends BaseRepository<Artista, Long> {
 
     @Query("""
             select a

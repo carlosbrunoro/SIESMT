@@ -58,6 +58,13 @@ application:
     jwt:
       secret: ${JWT_SECRET:Qv9J8yP7mGxKZr5Yd4C6XcB1t3UuA0EwM2pH8LqNfSDoR7aWkKZJ5c9BVe6xM0yT}
 
+  integrations:
+    minio:
+      endpoint: http://localhost:9000
+      access-key: minioadmin
+      secret-key: minioadmin
+      bucket-name: imagens
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

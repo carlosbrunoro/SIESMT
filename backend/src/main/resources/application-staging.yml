@@ -53,6 +53,13 @@ application:
     jwt:
       secret: ${JWT_SECRET}
 
+  integrations:
+    minio:
+      endpoint: ${MINIO_ENDPOINT}
+      access-key:  ${MINIO_SECRET_KEY}
+      secret-key: ${MINIO_ACCESS_KEY}
+      bucket-name: ${MINIO_BUCKET}
+
 logging:
   level:
     org.hibernate.SQL: INFO

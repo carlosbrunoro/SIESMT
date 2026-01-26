@@ -13,6 +13,7 @@ public class ApplicationProperties {
 
     private String version;
     private Security security;
+    private Integrations integrations;
 
     @Getter
     @Setter
@@ -23,6 +24,21 @@ public class ApplicationProperties {
         @Setter
         public static class Jwt {
             private String secret;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class Integrations {
+        private Minio minio;
+
+        @Getter
+        @Setter
+        public static class Minio {
+            private String endpoint;
+            private String bucketName;
+            private String accessKey;
+            private String secretKey;
         }
     }
 

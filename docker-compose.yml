@@ -12,6 +12,22 @@ services:
       - seplag_pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - seplag_minio_data:/data
+    restart: unless-stopped
+
 volumes:
   seplag_pgdata:
     name: seplag_postgres_data
+  seplag_minio_data:
+    name: seplag_minio_data

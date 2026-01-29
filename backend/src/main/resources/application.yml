@@ -65,6 +65,9 @@ application:
       secret-key: minioadmin
       bucket-name: imagens
 
+    argus:
+      endpoint: https://integrador-argus-api.geia.vip
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

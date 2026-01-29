@@ -60,6 +60,9 @@ application:
       secret-key: ${MINIO_ACCESS_KEY}
       bucket-name: ${MINIO_BUCKET}
 
+    argus:
+      endpoint: ${ARGUS-API.GEIA_ENDPOINT}
+
 logging:
   level:
     org.hibernate.SQL: INFO

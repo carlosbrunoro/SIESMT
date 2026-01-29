@@ -31,6 +31,7 @@ public class ApplicationProperties {
     @Setter
     public static class Integrations {
         private Minio minio;
+        private Argus argus;
 
         @Getter
         @Setter
@@ -39,6 +40,12 @@ public class ApplicationProperties {
             private String bucketName;
             private String accessKey;
             private String secretKey;
+        }
+
+        @Getter
+        @Setter
+        public static class Argus {
+            private String endpoint;
         }
     }
 

@@ -1,6 +1,13 @@
 package br.gov.mt.seplag.core.config;
 
+import br.gov.mt.seplag.core.config.properties.ApplicationProperties;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -37,6 +44,38 @@ public class ApplicationConfig {
         log.info("Expiração: {} minutos", tempoDeExpiracaoMinutos);
 
         return cacheManager;
+    }
+
+    @Bean
+    public OpenAPI customOpenAPI(final ApplicationProperties applicationProperties) {
+        return new OpenAPI()
+            .addServersItem(
+                new Server().url(applicationProperties.getEndpoint())
+            )
+            .components(
+                new Components()
+                    .addSecuritySchemes(
+                        "bearer-jwt",
+                        new SecurityScheme()
+                            .type(SecurityScheme.Type.HTTP)
+                            .scheme("bearer")
+                            .bearerFormat("JWT")
+                            .in(SecurityScheme.In.HEADER)
+                            .name("Authorization")
+                    )
+            )
+            .addSecurityItem(
+                new SecurityRequirement().addList("bearer-jwt")
+            )
+            .info(
+                new Info()
+                    .title(applicationProperties.getName())
+                    .version(
+                        applicationProperties.getEnv() + " - " +
+                            "(" + applicationProperties.getVersion() + ")"
+                    )
+                    .description(applicationProperties.getDescription())
+            );
     }
 
 }

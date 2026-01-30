@@ -12,8 +12,12 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationProperties {
 
     private String version;
+    private String endpoint;
     private Security security;
     private Integrations integrations;
+    private String name;
+    private String description;
+    private String env;
 
     @Getter
     @Setter

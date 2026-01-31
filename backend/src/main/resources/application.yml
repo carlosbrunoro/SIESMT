@@ -75,6 +75,11 @@ application:
     argus:
       endpoint: https://integrador-argus-api.geia.vip
 
+  scheduler:
+    regional-sync:
+      enabled: true
+      cron: "*/30 * * * * *"
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

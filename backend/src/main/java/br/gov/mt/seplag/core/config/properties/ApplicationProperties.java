@@ -18,6 +18,7 @@ public class ApplicationProperties {
     private String name;
     private String description;
     private String env;
+    private Scheduler scheduler;
 
     @Getter
     @Setter
@@ -50,6 +51,19 @@ public class ApplicationProperties {
         @Setter
         public static class Argus {
             private String endpoint;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class Scheduler {
+        private RegionalSync regionalSync;
+
+        @Getter
+        @Setter
+        public static class RegionalSync {
+            private Boolean enabled;
+            private String cron;
         }
     }
 

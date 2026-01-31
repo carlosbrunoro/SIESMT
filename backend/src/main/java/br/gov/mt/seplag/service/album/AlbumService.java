@@ -12,6 +12,7 @@ import java.util.Map;
 
 import static br.gov.mt.seplag.core.query.QueryParamUtils.likeContainsIgnoreCase;
 import static io.micrometer.common.util.StringUtils.isBlank;
+import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
 @Service
@@ -27,7 +28,7 @@ public class AlbumService {
 
     @Transactional
     public Album create(final Album request) {
-        if (request == null || isBlank(request.getNome())) {
+        if (isNull(request) || isBlank(request.getNome())) {
             throw DomainException.businessRule("validation.field.required", NOME);
         }
 

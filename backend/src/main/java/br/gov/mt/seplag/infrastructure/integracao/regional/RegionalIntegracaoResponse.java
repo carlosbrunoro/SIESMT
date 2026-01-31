@@ -15,6 +15,6 @@ public class RegionalIntegracaoResponse {
 
     private Long id;
     private String nome;
-    private String situacao;
+    private Boolean ativo;
 
 }

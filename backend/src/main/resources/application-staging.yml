@@ -85,5 +85,4 @@ logging:
     org.springframework: INFO
     org.springframework.security: INFO
     br.gov.mt.seplag: DEBUG
-    org.liquibase: INFO
     com.zaxxer.hikari: INFO

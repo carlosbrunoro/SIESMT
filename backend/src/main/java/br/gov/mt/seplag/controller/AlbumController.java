@@ -1,6 +1,7 @@
 package br.gov.mt.seplag.controller;
 
 import br.gov.mt.seplag.common.pageable.PageableFactory;
+import br.gov.mt.seplag.core.exception.DomainException;
 import br.gov.mt.seplag.dto.album.AlbumRequest;
 import br.gov.mt.seplag.dto.album.AlbumResponse;
 import br.gov.mt.seplag.dto.base.PageResponse;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/albuns")
@@ -121,6 +125,21 @@ public class AlbumController {
 
         final Page<Album> albuns = albumService.listarPor(artistaNome, flagCantores, flagBandas, pageable);
         return PageResponse.from(albuns, mapper::toResponse);
+    }
+
+    @PostMapping(
+        value = "/{idAlbum}/capas",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    @Operation(
+        summary = "Adicionar capas ao álbum",
+        description = "Realiza o upload de uma ou mais imagens e associa as capas ao álbum informado."
+    )
+    public ResponseEntity<Void> adicionarCapasAlbum(@PathVariable final Long idAlbum,
+                                                    @RequestPart("files") final MultipartFile[] files) throws DomainException {
+        albumService.adicionarCapasAlbum(idAlbum, files);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }

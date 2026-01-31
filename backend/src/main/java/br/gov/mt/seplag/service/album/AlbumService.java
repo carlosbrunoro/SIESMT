@@ -4,11 +4,13 @@ import br.gov.mt.seplag.core.exception.DomainException;
 import br.gov.mt.seplag.entity.Album;
 import br.gov.mt.seplag.entity.Artista;
 import br.gov.mt.seplag.repository.AlbumRepository;
+import br.gov.mt.seplag.service.album.imagem.ImagemAlbumService;
 import br.gov.mt.seplag.service.artista.ArtistaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -25,11 +27,14 @@ public class AlbumService {
     private static final String NOME = "nome";
     private final AlbumRepository repository;
     private final ArtistaService artistaService;
+    private final ImagemAlbumService imagemAlbumService;
 
     public AlbumService(final AlbumRepository repository,
-                        final ArtistaService artistaService) {
+                        final ArtistaService artistaService,
+                        final ImagemAlbumService imagemAlbumService) {
         this.repository = repository;
         this.artistaService = artistaService;
+        this.imagemAlbumService = imagemAlbumService;
     }
 
     @Transactional
@@ -71,6 +76,13 @@ public class AlbumService {
         final String nome = likeContainsIgnoreCase(nomeArtista);
 
         return repository.listarPor(nome, flagCantores, flagBandas, pageable);
+    }
+
+    @Transactional
+    public void adicionarCapasAlbum(final Long idAlbum, final MultipartFile[] files) {
+        final Album album = findById(idAlbum);
+
+        imagemAlbumService.salvarCapas(album, files);
     }
 
     private Album findById(final Long id) {

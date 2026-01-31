@@ -24,8 +24,7 @@ public class PageableFactory {
     public Pageable criar(final Integer page,
                           final Integer size,
                           final String order,
-                          final String campoOrdenacao
-    ) {
+                          final String campoOrdenacao) {
         final int pageSeguro = nonNull(page) ? Math.max(page, 0) : 0;
         final int sizeSeguro = nonNull(size)
             ? Math.min(size, SIZE_MAXIMO)

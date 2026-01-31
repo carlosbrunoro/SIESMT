@@ -2,7 +2,9 @@ package br.gov.mt.seplag.service.album;
 
 import br.gov.mt.seplag.core.exception.DomainException;
 import br.gov.mt.seplag.entity.Album;
+import br.gov.mt.seplag.entity.Artista;
 import br.gov.mt.seplag.repository.AlbumRepository;
+import br.gov.mt.seplag.service.artista.ArtistaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import static br.gov.mt.seplag.core.query.QueryParamUtils.likeContainsIgnoreCase
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Service
 public class AlbumService {
@@ -21,9 +24,12 @@ public class AlbumService {
     private static final String RESOURCE_ALBUM = "Album";
     private static final String NOME = "nome";
     private final AlbumRepository repository;
+    private final ArtistaService artistaService;
 
-    public AlbumService(final AlbumRepository repository) {
+    public AlbumService(final AlbumRepository repository,
+                        final ArtistaService artistaService) {
         this.repository = repository;
+        this.artistaService = artistaService;
     }
 
     @Transactional
@@ -33,6 +39,7 @@ public class AlbumService {
         }
 
         validateNomeUnico(request);
+        validaExistenciaArtistas(request);
 
         return repository.save(request);
     }
@@ -41,6 +48,7 @@ public class AlbumService {
     public Album update(final Long id, final Album request) {
         request.setId(id);
         validateNomeUnico(request);
+        validaExistenciaArtistas(request);
 
         final Album album = findById(id);
         album.setNome(request.getNome());
@@ -76,6 +84,14 @@ public class AlbumService {
 
         if (isTrue(repository.existsBy(entity.getId(), filtros))) {
             throw DomainException.businessRule("business.album.nome.exists", entity.getNome());
+        }
+    }
+
+    private void validaExistenciaArtistas(final Album request) {
+        if (isNotEmpty(request.getArtistas())) {
+            for (final Artista artista : request.getArtistas()) {
+                artistaService.existsById(artista.getId());
+            }
         }
     }
 

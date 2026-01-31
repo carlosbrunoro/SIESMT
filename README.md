@@ -1,3 +1,37 @@
+# Projeto Prático – Processo Seletivo SEPLAG 2026
+
+Este repositório contém a implementação do **Projeto Prático – Back End Java Sênior**, conforme exigido no **Processo
+Seletivo Conjunto nº 001/2026/SEPLAG e demais Órgãos**.
+
+## Dados do Candidato
+
+- **Nome:** CARLOS EDUARDO RIBEIRO BRUNORO
+- **CPF:** 942.885.262-72
+- **Nº de Inscrição:** 16366
+
+## Vaga
+
+- **Cargo:** Engenheiro da Computação – Sênior
+- **Processo Seletivo:** Conjunto nº 001/2026/SEPLAG e demais Órgãos
+
+## Escopo da Prova
+
+Este projeto refere-se ao **ANEXO II-A – Projeto Desenvolvedor Back End**, correspondente ao:
+
+**PROJETO PRÁTICO – IMPLEMENTAÇÃO BACK END JAVA SÊNIOR**
+
+O escopo da avaliação é **exclusivamente Back End**, não contemplando desenvolvimento de Front End, conforme definido no
+edital do processo seletivo.
+
+## Sobre o Projeto
+
+O objetivo deste projeto é demonstrar conhecimentos técnicos e boas práticas no desenvolvimento de APIs REST utilizando
+Java e Spring Boot, incluindo organização de código, segurança, persistência de dados, versionamento de banco e execução
+em ambiente containerizado.
+
+As instruções detalhadas para **execução**, **configuração** e **testes** da aplicação estão descritas nas seções abaixo
+deste documento.
+
 # Catálogo Musical API
 
 API REST desenvolvida em **Java 21 + Spring Boot** como parte do Projeto Prático – Implementação Back End Java Sênior. O

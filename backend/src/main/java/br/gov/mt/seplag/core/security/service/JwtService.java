@@ -19,7 +19,7 @@ import static org.apache.commons.lang3.BooleanUtils.isFalse;
 @Service
 public class JwtService {
     private static final String ISSUER = "spring-security-jwt";
-    private static final Duration EXPIRY_TIME = Duration.ofMinutes(5);
+    private static final Duration EXPIRY_TIME = Duration.ofMinutes(50);
     private static final Duration REFRESH_TIME = Duration.ofHours(4);
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;

@@ -15,7 +15,7 @@ public interface RegionalRepository extends BaseRepository<Regional, Long> {
     @Query("""
             SELECT r
             FROM Regional r
-            WHERE (:nome IS NULL OR LOWER(r.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
+            WHERE (:nome IS NULL OR LOWER(r.nome) LIKE :nome)
         """)
     Page<Regional> listarPor(final String nome, final Pageable pageable);
 

@@ -18,8 +18,8 @@ public interface AlbumRepository extends BaseRepository<Album, Long> {
     @Query("""
             select a
             from Album a
-            left join a.artistas ar
-            where (:nomeArtista is null or lower(ar.nome) like :nomeArtista)
+            left join a.artistas artista
+            where (:nomeArtista is null or lower(artista.nome) like :nomeArtista)
             and (:flagCantores is null or (:flagCantores = true and exists (select 1 from a.artistas ar2 where ar2.tipo = br.gov.mt.seplag.enumeration.TipoArtista.CANTOR)) )
             and (:flagBandas is null or (:flagBandas = true and exists (select 1 from a.artistas ar3 where ar3.tipo = br.gov.mt.seplag.enumeration.TipoArtista.BANDA)) )
         """)

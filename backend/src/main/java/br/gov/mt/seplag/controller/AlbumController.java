@@ -1,5 +1,6 @@
 package br.gov.mt.seplag.controller;
 
+import br.gov.mt.seplag.common.pageable.PageableFactory;
 import br.gov.mt.seplag.dto.album.AlbumRequest;
 import br.gov.mt.seplag.dto.album.AlbumResponse;
 import br.gov.mt.seplag.dto.base.PageResponse;
@@ -7,6 +8,7 @@ import br.gov.mt.seplag.entity.Album;
 import br.gov.mt.seplag.mapper.AlbumMapper;
 import br.gov.mt.seplag.service.album.AlbumService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,10 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AlbumController {
 
     private final AlbumService albumService;
+    private final PageableFactory pageableFactory;
     private final AlbumMapper mapper;
 
-    public AlbumController(final AlbumService albumService, final AlbumMapper mapper) {
+    public AlbumController(final AlbumService albumService,
+                           final PageableFactory pageableFactory,
+                           final AlbumMapper mapper) {
         this.albumService = albumService;
+        this.pageableFactory = pageableFactory;
         this.mapper = mapper;
     }
 
@@ -58,14 +64,63 @@ public class AlbumController {
         return ResponseEntity.ok(mapper.toResponse(albumService.buscarPorId(id)));
     }
 
-    @Operation(summary = "Buscar álbuns com paginação e filtros")
+    @Operation(
+        summary = "Buscar álbuns com paginação e filtros",
+        description = """
+            Retorna uma lista paginada de álbuns, permitindo filtros opcionais por nome do artista
+            e tipo de formação (cantores solo e/ou bandas).
+            
+            A paginação é controlada pelos parâmetros <b>page</b> e <b>size</b>, com limites
+            aplicados no backend para garantir desempenho e estabilidade da API.
+            
+            <ul>
+              <li><b>page</b>: índice da página (base 0). Valores negativos são ajustados para 0.</li>
+              <li><b>size</b>: quantidade de registros por página. O valor máximo permitido é 50.</li>
+              <li>Caso <b>page</b> ou <b>size</b> não sejam informados, serão utilizados os valores padrão.</li>
+            </ul>
+            
+            O retorno inclui metadados de paginação juntamente com a lista de álbuns.
+            """
+    )
     @GetMapping
-    public PageResponse<AlbumResponse> findAll(@RequestParam(required = false) final String artistaNome,
-                                               @RequestParam(required = false) final Boolean flagCantores,
-                                               @RequestParam(required = false) final Boolean flagBandas,
-                                               final Pageable pageable) {
-        final Page<Album> page = albumService.listarPor(artistaNome, flagCantores, flagBandas, pageable);
-        return PageResponse.from(page, mapper::toResponse);
+    public PageResponse<AlbumResponse> findAll(
+        @Parameter(
+            description = "Nome do artista para filtro parcial ou completo"
+        )
+        @RequestParam(required = false) final String artistaNome,
+
+        @Parameter(
+            description = "Indica se álbuns de cantores solo devem ser incluídos no resultado"
+        )
+        @RequestParam(required = false) final Boolean flagCantores,
+
+        @Parameter(
+            description = "Indica se álbuns de bandas devem ser incluídos no resultado"
+        )
+        @RequestParam(required = false) final Boolean flagBandas,
+
+        @Parameter(
+            description = "Direção da ordenação alfabética pelo nome do artista (asc ou desc)",
+            example = "asc"
+        )
+        @RequestParam(required = false, defaultValue = "asc") final String order,
+
+        @Parameter(
+            description = "Número da página (inicia em 0)",
+            example = "0"
+        )
+        @RequestParam(required = false) final Integer page,
+
+        @Parameter(
+            description = "Quantidade de registros por página (máximo permitido: 50)",
+            example = "10"
+        )
+        @RequestParam(required = false) final Integer size) {
+
+        final Pageable pageable = pageableFactory.criar(page, size, order, "artista.nome");
+
+        final Page<Album> albuns = albumService.listarPor(artistaNome, flagCantores, flagBandas, pageable);
+        return PageResponse.from(albuns, mapper::toResponse);
     }
 
 }

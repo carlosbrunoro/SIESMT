@@ -11,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,12 +19,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
+import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Slf4j
 @RestControllerAdvice
@@ -233,6 +237,55 @@ public class GlobalExceptionHandler {
         log.warn("Multipart request expected but not received at {}: {}", path, ex.getMessage());
 
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestPart(final MissingServletRequestPartException ex,
+                                                                         final WebRequest request) {
+        final String path = getPathFromRequest(request);
+
+        final ErrorResponse errorResponse = ErrorResponse.of(
+            HttpStatus.BAD_REQUEST.value(),
+            messageService.toLocale("error.badrequest.title"),
+            messageService.toLocale("validation.multipart.required"),
+            path,
+            "MULTIPART_PART_REQUIRED"
+        );
+
+        errorResponse.setDetails(List.of(
+            new ErrorResponse.ValidationError(
+                ex.getRequestPartName(),
+                messageService.toLocale("validation.multipart.file.required"),
+                null
+            )
+        ));
+
+        log.warn("Parte de arquivo ausente na requisição em {}: {}", path, ex.getMessage());
+
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupported(final HttpMediaTypeNotSupportedException ex,
+                                                                         final WebRequest request) {
+        final String path = getPathFromRequest(request);
+
+        final String unsupported = nonNull(ex.getContentType()) ? ex.getContentType().toString() : "desconhecido";
+        final String supported = isEmpty(ex.getSupportedMediaTypes())
+            ? "nenhum"
+            : ex.getSupportedMediaTypes().toString();
+
+        final ErrorResponse errorResponse = ErrorResponse.of(
+            HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+            messageService.toLocale("error.unsupported.media.type.title"),
+            messageService.toLocale("error.unsupported.media.type.detail", unsupported, supported),
+            path,
+            "UNSUPPORTED_MEDIA_TYPE"
+        );
+
+        log.warn("Content-Type não suportado no endpoint {}: {}, suportados: {}", path, unsupported, supported);
+
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(errorResponse);
     }
 
     private String getPathFromRequest(final WebRequest request) {

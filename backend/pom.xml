@@ -29,6 +29,7 @@
         <aws.sdk.version>2.41.10</aws.sdk.version>
         <springdoc-openapi-starter-webmvc-ui>2.8.5</springdoc-openapi-starter-webmvc-ui>
         <bucket4j-core>8.0.1</bucket4j-core>
+        <io.minio>8.6.0</io.minio>
     </properties>
 
     <dependencyManagement>
@@ -171,6 +172,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${io.minio}</version>
         </dependency>
     </dependencies>
 

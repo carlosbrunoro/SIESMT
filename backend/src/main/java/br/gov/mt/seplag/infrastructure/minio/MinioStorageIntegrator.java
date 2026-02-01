@@ -6,16 +6,12 @@ import br.gov.mt.seplag.service.arquivo.StorageIntegrator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -27,23 +23,10 @@ public class MinioStorageIntegrator implements StorageIntegrator {
     private final S3Client s3Client;
     private final ApplicationProperties applicationProperties;
 
-    protected MinioStorageIntegrator(final ApplicationProperties applicationProperties) {
+    protected MinioStorageIntegrator(final ApplicationProperties applicationProperties,
+                                     final S3Client s3Client) {
         this.applicationProperties = applicationProperties;
-
-        final String endpoint = applicationProperties.getIntegrations().getMinio().getEndpoint();
-        final String accessKey = applicationProperties.getIntegrations().getMinio().getAccessKey();
-        final String secretKey = applicationProperties.getIntegrations().getMinio().getSecretKey();
-
-        s3Client = S3Client
-            .builder()
-            .endpointOverride(URI.create(endpoint))
-            .region(Region.US_EAST_1)
-            .credentialsProvider(
-                StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create(accessKey, secretKey)
-                )
-            )
-            .build();
+        this.s3Client = s3Client;
     }
 
     @Override
@@ -69,7 +52,7 @@ public class MinioStorageIntegrator implements StorageIntegrator {
         } catch (final IOException | S3Exception e) {
             log.error("Falha ao enviar arquivo '{}' para o MinIO", file.getOriginalFilename(), e);
 
-            throw DomainException.businessRule("infra.file.upload.failed", file.getOriginalFilename());
+            throw DomainException.persistenceFailure("infra.file.upload.failed", file.getOriginalFilename());
         }
     }
 

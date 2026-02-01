@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import static java.util.Objects.isNull;
+
 @Service
 public class ArquivoService {
     private static final String RESOURCE_ARQUIVO = "Arquivo";
@@ -23,6 +25,10 @@ public class ArquivoService {
 
     @Transactional
     public Arquivo uploadArquivo(final MultipartFile file) {
+        if (isNull(file) || file.isEmpty()) {
+            throw DomainException.validation("business.file.empty");
+        }
+
         final String key = storageIntegrator.upload(file);
 
         try {

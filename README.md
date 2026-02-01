@@ -140,6 +140,42 @@ testar endpoints.
 
 > Observação: o caminho exato depende das configurações do projeto e do contexto (server.port, context-path, etc.).
 
+## MinIO Local (Servidor de Objetos)
+
+Este projeto utiliza o **MinIO** como storage de arquivos, compatível com S3.
+
+---
+
+## Acessando a interface web
+
+- URL: [http://localhost:9001/login](http://localhost:9001/login)
+- Login / Senha:
+    - **Access Key:** `minioadmin`
+    - **Secret Key:** `minioadmin`
+
+> A interface web permite criar buckets, enviar arquivos e visualizar o conteúdo.
+
+## Bucket padrão
+
+Para facilitar a avaliação e agilizar o processo, foi criado um bucket chamado **`imagens`** de forma **automática na
+inicialização do projeto**.  
+Dessa forma, não é necessário criar o bucket manualmente no MinIO.
+
+---
+
+## Configuração da aplicação
+
+No arquivo `application.yml`, configure o MinIO:
+
+```yaml
+integrations:
+  minio:
+    endpoint: http://localhost:9000
+    access-key: minioadmin
+    secret-key: minioadmin
+    bucket-name: imagens
+
+
 ## Rate Limit
 
 A arquitetura foi preparada para incluir rate limiting por IP ou por usuário autenticado. A implementação está

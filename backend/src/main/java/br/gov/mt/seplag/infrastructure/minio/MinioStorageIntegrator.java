@@ -23,8 +23,8 @@ public class MinioStorageIntegrator implements StorageIntegrator {
     private final S3Client s3Client;
     private final ApplicationProperties applicationProperties;
 
-    protected MinioStorageIntegrator(final ApplicationProperties applicationProperties,
-                                     final S3Client s3Client) {
+    public MinioStorageIntegrator(final ApplicationProperties applicationProperties,
+                                  final S3Client s3Client) {
         this.applicationProperties = applicationProperties;
         this.s3Client = s3Client;
     }

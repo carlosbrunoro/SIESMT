@@ -52,6 +52,13 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+security:
+  jwt:
+    issuer: spring-security-jwt
+    access-token-expiration: 5m
+    refresh-token-expiration: 1h
+    secret: ${JWT_SECRET:Qv9J8yP7mGxKZr5Yd4C6XcB1t3UuA0EwM2pH8LqNfSDoR7aWkKZJ5c9BVe6xM0yT}
+
 server:
   port: 8080
 
@@ -61,9 +68,6 @@ application:
   env: ${spring.profiles.active}
   version: @project.version@
   endpoint: http://localhost:8080
-  security:
-    jwt:
-      secret: ${JWT_SECRET:Qv9J8yP7mGxKZr5Yd4C6XcB1t3UuA0EwM2pH8LqNfSDoR7aWkKZJ5c9BVe6xM0yT}
 
   integrations:
     minio:
@@ -79,6 +83,11 @@ application:
     regional-sync:
       enabled: true
       cron: "*/30 * * * * *"
+
+  rate-limit:
+    requests: 10
+    duration: 1m
+    cache-ttl: 5m
 
 logging:
   level:

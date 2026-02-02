@@ -48,6 +48,13 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+security:
+  jwt:
+    issuer: spring-security-jwt
+    access-token-expiration: 5m
+    refresh-token-expiration: 4h
+    secret: ${JWT_SECRET}
+
 server:
   port: 8080
 
@@ -57,9 +64,6 @@ application:
   env: ${spring.profiles.active}
   version: @project.version@
   endpoint: ${APPLICATION_ENDPOINT}
-  security:
-    jwt:
-      secret: ${JWT_SECRET}
 
   integrations:
     minio:

@@ -1,6 +1,6 @@
 package br.gov.mt.seplag.core.config;
 
-import br.gov.mt.seplag.core.config.properties.ApplicationProperties;
+import br.gov.mt.seplag.core.config.properties.JwtProperties;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -59,7 +59,9 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(Customizer.withDefaults())
+                .jwt(jwt -> jwt
+                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                )
             );
 
         return http.build();
@@ -123,10 +125,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecretKey jwtSigningKey(final ApplicationProperties application) {
-        final String secret = application.getSecurity().getJwt().getSecret();
+    public SecretKey jwtSigningKey(final JwtProperties jwtProperties) {
+        final String secret = jwtProperties.getSecret();
         final byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
 
         return new SecretKeySpec(keyBytes, "HmacSHA256");
     }
+
 }

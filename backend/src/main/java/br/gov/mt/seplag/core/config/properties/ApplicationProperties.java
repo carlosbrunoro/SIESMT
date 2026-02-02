@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
+
 @Getter
 @Setter
 @Configuration
@@ -13,24 +15,12 @@ public class ApplicationProperties {
 
     private String version;
     private String endpoint;
-    private Security security;
     private Integrations integrations;
     private String name;
     private String description;
     private String env;
     private Scheduler scheduler;
-
-    @Getter
-    @Setter
-    public static class Security {
-        private Jwt jwt;
-
-        @Getter
-        @Setter
-        public static class Jwt {
-            private String secret;
-        }
-    }
+    private RateLimit rateLimit;
 
     @Getter
     @Setter
@@ -65,6 +55,14 @@ public class ApplicationProperties {
             private Boolean enabled;
             private String cron;
         }
+    }
+
+    @Getter
+    @Setter
+    public static class RateLimit {
+        private Integer requests;
+        private Duration duration;
+        private Duration cacheTtl;
     }
 
 }

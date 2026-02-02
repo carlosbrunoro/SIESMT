@@ -1,5 +1,6 @@
 package br.gov.mt.seplag.core.security.service;
 
+import br.gov.mt.seplag.core.config.properties.JwtProperties;
 import br.gov.mt.seplag.core.exception.DomainException;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -11,35 +12,34 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
-import java.time.Duration;
 import java.time.Instant;
 
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 
 @Service
 public class JwtService {
-    private static final String ISSUER = "spring-security-jwt";
-    private static final Duration EXPIRY_TIME = Duration.ofMinutes(50);
-    private static final Duration REFRESH_TIME = Duration.ofHours(4);
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
     private final Clock clock;
+    private final JwtProperties jwtProperties;
 
     public JwtService(final JwtEncoder encoder,
                       final JwtDecoder decoder,
-                      final Clock clock) {
+                      final Clock clock,
+                      final JwtProperties jwtProperties) {
         this.encoder = encoder;
         this.decoder = decoder;
         this.clock = clock;
+        this.jwtProperties = jwtProperties;
     }
 
     public Jwt generateAccessToken(final String username, final String authorities) {
         final Instant now = Instant.now(clock);
 
         final JwtClaimsSet claims = JwtClaimsSet.builder()
-            .issuer(ISSUER)
+            .issuer(jwtProperties.getIssuer())
             .issuedAt(now)
-            .expiresAt(now.plus(EXPIRY_TIME))
+            .expiresAt(now.plus(jwtProperties.getAccessTokenExpiration()))
             .subject(username)
             .claim("scope", authorities)
             .build();
@@ -53,9 +53,9 @@ public class JwtService {
         final Instant now = Instant.now(clock);
 
         final JwtClaimsSet claims = JwtClaimsSet.builder()
-            .issuer(ISSUER)
+            .issuer(jwtProperties.getIssuer())
             .issuedAt(now)
-            .expiresAt(now.plus(REFRESH_TIME))
+            .expiresAt(now.plus(jwtProperties.getRefreshTokenExpiration()))
             .subject(username)
             .claim("type", "refresh")
             .build();

@@ -1,34 +1,36 @@
 package br.gov.mt.seplag.core.config;
 
+import br.gov.mt.seplag.core.message.MessageService;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Bucket4j;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.time.Duration;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Component
 public class RateLimitFilter extends OncePerRequestFilter {
 
-    private final Cache<String, Bucket> cache = Caffeine.newBuilder().expireAfterAccess(Duration.ofMinutes(5)).build();
+    private final Cache<String, Bucket> cache;
+    private final Bandwidth bandwidth;
+    private final MessageService messageService;
 
-    private Bucket resolveBucket(final String key) {
-        return cache.get(key, k ->
-            Bucket4j.builder()
-                .addLimit(Bandwidth.simple(10, Duration.ofMinutes(1)))
-                .build()
-        );
+    public RateLimitFilter(final Cache<String, Bucket> cache,
+                           final Bandwidth bandwidth,
+                           final MessageService messageService) {
+        this.cache = cache;
+        this.bandwidth = bandwidth;
+        this.messageService = messageService;
     }
 
     @Override
@@ -36,16 +38,32 @@ public class RateLimitFilter extends OncePerRequestFilter {
                                     @NonNull final HttpServletResponse response,
                                     @NonNull final FilterChain filterChain) throws ServletException, IOException {
 
-        final String key = isNotBlank(request.getRemoteUser()) ? request.getRemoteUser() : request.getRemoteAddr();
+        final String key = isNotBlank(request.getRemoteUser())
+            ? request.getRemoteUser()
+            : request.getRemoteAddr();
+
         final Bucket bucket = resolveBucket(key);
 
         if (bucket.tryConsume(1)) {
             filterChain.doFilter(request, response);
-        } else {
-            response.setStatus(429);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Limite de 10 requisições por minuto excedido.\"}");
+            return;
         }
+
+        response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(
+            "{\"error\": \"" +
+                messageService.toLocale("error.rate.limit.exceeded") +
+                "\"}"
+        );
+    }
+
+    private Bucket resolveBucket(final String key) {
+        return cache.get(key, k ->
+            Bucket.builder()
+                .addLimit(bandwidth)
+                .build()
+        );
     }
 
 }

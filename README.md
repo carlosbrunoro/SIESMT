@@ -64,34 +64,21 @@ foco em:
 
 Antes de rodar a aplicação localmente, tenha instalado:
 
-- Docker & Docker Compose
-- JDK 21
-- Maven (para construir o backend, opcional se você usar o JAR já gerado)
+- Docker
+- Docker Compose
+- Maven (necessário caso queira recompilar a aplicação)
+
+> Observação: Maven e JDK 21 são necessários apenas caso seja preciso recompilar a aplicação.
+> O projeto já disponibiliza o artefato `app.jar`.
 
 ## Execução rápida (ambiente de desenvolvimento)
+A aplicação está totalmente empacotada em containers Docker.
 
-1. Subir o banco PostgreSQL via Docker Compose:
+Na raiz do projeto, execute:
 
-```powershell
+```bash
 docker compose up -d
 ```
-
-2. Rodar a aplicação backend (duas opções):
-
-- Usando o JAR já gerado (diretório `backend/target`):
-
-```powershell
-java -jar backend\target\catalogo-musical-api-1.0.0.jar
-```
-
-- Compilar e executar com Maven (na raiz do projeto):
-
-```powershell
-mvn -f backend\pom.xml clean package
-java -jar backend\target\catalogo-musical-api-1.0.0.jar
-```
-
-Observação: há um profile de staging com arquivo `application-staging.yml` em `backend/src/main/resources`.
 
 ## Configuração
 

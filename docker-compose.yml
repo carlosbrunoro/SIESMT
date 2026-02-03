@@ -1,4 +1,22 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: catalogo-musical-api
+    ports:
+      - "8080:8080"
+    environment:
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/catalogo_musical
+      SPRING_DATASOURCE_USERNAME: catalogo_user
+      SPRING_DATASOURCE_PASSWORD: catalogo_pass
+    depends_on:
+      - db
+      - minio
+
   db:
     image: postgres:16-alpine
     container_name: catalogo-musical-db

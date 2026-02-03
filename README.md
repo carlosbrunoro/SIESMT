@@ -130,8 +130,6 @@ Observações importantes:
 - O access token possui tempo de expiração curto (5 minutos) conforme os requisitos do projeto.
 - O fluxo de renovação (refresh token) está implementado para demonstrar a troca de tokens sem reautenticação completa.
 
-> ⚠️ Essas credenciais são apenas para demonstração local. Não use em produção.
-
 ## Endpoints (documentação)
 
 A API possui documentação OpenAPI/Swagger. Quando a aplicação estiver rodando localmente, acesse a URL do Swagger (
@@ -186,6 +184,23 @@ integrations:
     signature-duration: 30m
 ```
 ---
+
+## Teste de WebSocket – Notificação de Novo Álbum
+
+Esta página tem como objetivo **validar a comunicação via WebSocket (STOMP + SockJS)**, responsável por notificar o front-end sempre que um novo álbum for cadastrado.
+
+### Acesso
+Após iniciar a aplicação, acesse:
+- http://localhost:8080/index.html
+
+### Funcionamento
+1. Ao abrir a página, a conexão WebSocket é estabelecida automaticamente (**status: Conectado**).
+2. O cliente fica inscrito no tópico `/topic/novo-album`.
+3. Quando um novo álbum é cadastrado com sucesso no back-end, uma notificação é enviada e exibida em tempo real na tela.
+
+### Observação
+A página é utilizada apenas para **teste técnico da funcionalidade WebSocket**, não representando a interface final do sistema.
+
 
 ## Rate Limit
 

@@ -3,9 +3,11 @@ package br.gov.mt.seplag.service.album;
 import br.gov.mt.seplag.core.exception.DomainException;
 import br.gov.mt.seplag.entity.Album;
 import br.gov.mt.seplag.entity.Artista;
+import br.gov.mt.seplag.event.AlbumCriadoEvent;
 import br.gov.mt.seplag.repository.AlbumRepository;
 import br.gov.mt.seplag.service.album.imagem.ImagemAlbumService;
 import br.gov.mt.seplag.service.artista.ArtistaService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,13 +30,16 @@ public class AlbumService {
     private final AlbumRepository repository;
     private final ArtistaService artistaService;
     private final ImagemAlbumService imagemAlbumService;
+    private final ApplicationEventPublisher publisher;
 
     public AlbumService(final AlbumRepository repository,
                         final ArtistaService artistaService,
-                        final ImagemAlbumService imagemAlbumService) {
+                        final ImagemAlbumService imagemAlbumService,
+                        final ApplicationEventPublisher publisher) {
         this.repository = repository;
         this.artistaService = artistaService;
         this.imagemAlbumService = imagemAlbumService;
+        this.publisher = publisher;
     }
 
     @Transactional
@@ -46,7 +51,10 @@ public class AlbumService {
         validateNomeUnico(request);
         validaExistenciaArtistas(request);
 
-        return repository.save(request);
+        final Album album = repository.save(request);
+        publisher.publishEvent(new AlbumCriadoEvent(album.getId()));
+
+        return album;
     }
 
     @Transactional

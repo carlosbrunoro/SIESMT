@@ -6,7 +6,6 @@ import br.gov.mt.seplag.entity.Artista;
 import br.gov.mt.seplag.event.AlbumCriadoEvent;
 import br.gov.mt.seplag.repository.AlbumRepository;
 import br.gov.mt.seplag.service.album.AlbumService;
-import br.gov.mt.seplag.service.album.imagem.ImagemAlbumService;
 import br.gov.mt.seplag.service.artista.ArtistaService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,9 +38,6 @@ class AlbumServiceTest {
 
     @Mock
     private ArtistaService artistaService;
-
-    @Mock
-    private ImagemAlbumService imagemAlbumService;
 
     @Mock
     private ApplicationEventPublisher publisher;

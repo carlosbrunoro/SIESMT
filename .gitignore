@@ -53,8 +53,6 @@ desktop.ini
 #   ENV / CONFIG
 ############################
 *.local
-application-local.yml
-application-test.yml
 
 ############################
 #   TEST / COVERAGE

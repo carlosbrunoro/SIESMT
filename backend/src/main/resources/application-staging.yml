@@ -71,6 +71,7 @@ application:
       access-key: ${MINIO_SECRET_KEY}
       secret-key: ${MINIO_ACCESS_KEY}
       bucket-name: ${MINIO_BUCKET}
+      signature-duration: ${MINIO_SIGNATURE_DURATION}
 
     argus:
       endpoint: ${ARGUS-API.GEIA_ENDPOINT}

@@ -10,8 +10,11 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -22,11 +25,14 @@ public class MinioStorageIntegrator implements StorageIntegrator {
 
     private final S3Client s3Client;
     private final ApplicationProperties applicationProperties;
+    private final S3Presigner s3Presigner;
 
     public MinioStorageIntegrator(final ApplicationProperties applicationProperties,
-                                  final S3Client s3Client) {
+                                  final S3Client s3Client,
+                                  final S3Presigner s3Presigner) {
         this.applicationProperties = applicationProperties;
         this.s3Client = s3Client;
+        this.s3Presigner = s3Presigner;
     }
 
     @Override
@@ -85,6 +91,29 @@ public class MinioStorageIntegrator implements StorageIntegrator {
             log.error("Falha ao deletar arquivo '{}' do MinIO", key, e);
             throw DomainException.businessRule("infra.file.delete.failed", key);
         }
+    }
+
+    @Override
+    public String gerarLinkDownload(final String key) {
+        final var minio = applicationProperties.getIntegrations().getMinio();
+
+        final String bucketName = minio.getBucketName();
+        final Duration signatureDuration = minio.getSignatureDuration();
+
+        if (signatureDuration.isNegative() || signatureDuration.isZero()) {
+            throw DomainException.validation("infra.file.invalid.signature.duration");
+        }
+
+        final GetObjectPresignRequest presignRequest = GetObjectPresignRequest
+            .builder()
+            .signatureDuration(signatureDuration)
+            .getObjectRequest(req -> req
+                .bucket(bucketName)
+                .key(key)
+            )
+            .build();
+
+        return s3Presigner.presignGetObject(presignRequest).url().toString();
     }
 
 }

@@ -8,6 +8,7 @@ import br.gov.mt.seplag.dto.base.PageResponse;
 import br.gov.mt.seplag.entity.Album;
 import br.gov.mt.seplag.mapper.AlbumMapper;
 import br.gov.mt.seplag.service.album.AlbumService;
+import br.gov.mt.seplag.service.arquivo.StorageIntegrator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -32,13 +33,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class AlbumController {
 
     private final AlbumService albumService;
+    private final StorageIntegrator storageIntegrator;
     private final PageableFactory pageableFactory;
     private final AlbumMapper mapper;
 
     public AlbumController(final AlbumService albumService,
+                           final StorageIntegrator storageIntegrator,
                            final PageableFactory pageableFactory,
                            final AlbumMapper mapper) {
         this.albumService = albumService;
+        this.storageIntegrator = storageIntegrator;
         this.pageableFactory = pageableFactory;
         this.mapper = mapper;
     }
@@ -140,6 +144,24 @@ public class AlbumController {
         albumService.adicionarCapasAlbum(idAlbum, files);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/arquivos/{key}/link-pre-assinado")
+    @Operation(
+        summary = "Gerar link pré-assinado para acesso à imagem",
+        description = """
+            Gera um link pré-assinado para acesso temporário a um arquivo armazenado no MinIO.
+            
+            O link gerado permite a recuperação direta do arquivo sem necessidade de autenticação
+            adicional e possui tempo de expiração configurado para 30 minutos, conforme requisito
+            de segurança e controle de acesso.
+            
+            Após o prazo de expiração, o link torna-se inválido automaticamente.
+            """
+    )
+    public ResponseEntity<String> gerarLinkDownload(@PathVariable final String key) {
+        final String url = storageIntegrator.gerarLinkDownload(key);
+        return ResponseEntity.ok(url);
     }
 
 }

@@ -35,6 +35,7 @@ public class ApplicationProperties {
             private String bucketName;
             private String accessKey;
             private String secretKey;
+            private Duration signatureDuration;
         }
 
         @Getter

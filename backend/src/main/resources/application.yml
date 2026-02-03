@@ -75,6 +75,7 @@ application:
       access-key: minioadmin
       secret-key: minioadmin
       bucket-name: imagens
+      signature-duration: 30m
 
     argus:
       endpoint: https://integrador-argus-api.geia.vip

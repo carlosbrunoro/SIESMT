@@ -161,10 +161,6 @@ Para facilitar a avaliação e agilizar o processo, foi criado um bucket chamado
 inicialização do projeto**.  
 Dessa forma, não é necessário criar o bucket manualmente no MinIO.
 
----
-
-## Configuração da aplicação
-
 No arquivo `application.yml`, configure o MinIO:
 
 ```yaml
@@ -174,7 +170,22 @@ integrations:
     access-key: minioadmin
     secret-key: minioadmin
     bucket-name: imagens
+```
+---
 
+## Recuperação por link pré-assinado
+
+A aplicação disponibiliza a recuperação de arquivos por meio de **links pré-assinados**, compatíveis com S3/MinIO.
+
+Esses links são gerados pelo backend e possuem **tempo de expiração configurável**, permitindo o download direto do arquivo sem necessidade de autenticação adicional.  
+O valor padrão é **30 minutos**, ajustável pela propriedade `signature-duration` no `application.yml`:
+
+```yaml
+integrations:
+  minio:
+    signature-duration: 30m
+```
+---
 
 ## Rate Limit
 

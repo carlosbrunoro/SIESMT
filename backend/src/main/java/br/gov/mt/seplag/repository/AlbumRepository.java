@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface AlbumRepository extends BaseRepository<Album, Long> {
 
-    @EntityGraph(attributePaths = {"artistas"})
+    @EntityGraph(attributePaths = {"artistas", "imagens", "imagens.arquivo"})
     @Query("""
             select a
             from Album a
@@ -29,7 +29,7 @@ public interface AlbumRepository extends BaseRepository<Album, Long> {
                           final Pageable pageable);
 
     @NonNull
-    @EntityGraph(attributePaths = {"artistas"})
+    @EntityGraph(attributePaths = {"artistas", "imagens", "imagens.arquivo"})
     @Override
     Optional<Album> findById(@NonNull final Long id);
 

@@ -3,12 +3,14 @@ package br.gov.mt.seplag.entity;
 import br.gov.mt.seplag.entity.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,5 +46,8 @@ public class Album extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "artista_id")
     )
     private Set<Artista> artistas;
+
+    @OneToMany(mappedBy = "album", fetch = FetchType.LAZY)
+    private Set<ImagemAlbum> imagens;
 
 }

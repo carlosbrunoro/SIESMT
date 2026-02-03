@@ -28,6 +28,9 @@ public class AlbumResponse {
     @Schema(description = "Artistas associados ao álbum")
     private Set<ArtistaResponse> artistas;
 
+    @Schema(description = "Imagens associadas ao álbum")
+    private Set<ImagemAlbumResponse> imagens;
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -43,4 +46,25 @@ public class AlbumResponse {
         @Schema(description = "Tipo do artista (CANTOR/BANDA)", example = "CANTOR")
         private TipoArtista tipo;
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ImagemAlbumResponse {
+        private ArquivoResponse arquivo;
+
+        @Getter
+        @Setter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class ArquivoResponse {
+            private Long id;
+            private String storageKey;
+            private String nomeOriginal;
+            private String tipoMime;
+            private Long tamanho;
+        }
+    }
+
 }

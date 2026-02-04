@@ -31,7 +31,8 @@ public class ApplicationProperties {
         @Getter
         @Setter
         public static class Minio {
-            private String endpoint;
+            private String internalEndpoint;
+            private String publicEndpoint;
             private String bucketName;
             private String accessKey;
             private String secretKey;

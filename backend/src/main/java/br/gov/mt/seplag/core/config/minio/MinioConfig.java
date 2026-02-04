@@ -16,7 +16,7 @@ public class MinioConfig {
 
     @Bean
     public MinioClient minioClient() {
-        final String endpoint = applicationProperties.getIntegrations().getMinio().getEndpoint();
+        final String endpoint = applicationProperties.getIntegrations().getMinio().getInternalEndpoint();
         final String accessKey = applicationProperties.getIntegrations().getMinio().getAccessKey();
         final String secretKey = applicationProperties.getIntegrations().getMinio().getSecretKey();
 

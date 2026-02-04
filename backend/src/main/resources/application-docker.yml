@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/catalogo_musical
+    username: catalogo_user
+    password: catalogo_pass
+
+application:
+  endpoint: http://catalogo-musical-api:8080
+
+  integrations:
+    minio:
+      internal-endpoint: http://minio:9000
+      public-endpoint: http://localhost:9000

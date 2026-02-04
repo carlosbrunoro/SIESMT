@@ -20,7 +20,7 @@ public class S3ClientConfig {
         final var minio = properties.getIntegrations().getMinio();
 
         return S3Client.builder()
-            .endpointOverride(URI.create(minio.getEndpoint()))
+            .endpointOverride(URI.create(minio.getInternalEndpoint()))
             .region(Region.US_EAST_1)
             .credentialsProvider(
                 StaticCredentialsProvider.create(
@@ -43,7 +43,7 @@ public class S3ClientConfig {
         final var minio = properties.getIntegrations().getMinio();
 
         return S3Presigner.builder()
-            .endpointOverride(URI.create(minio.getEndpoint()))
+            .endpointOverride(URI.create(minio.getPublicEndpoint()))
             .region(Region.US_EAST_1)
             .credentialsProvider(
                 StaticCredentialsProvider.create(

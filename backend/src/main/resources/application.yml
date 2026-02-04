@@ -71,7 +71,8 @@ application:
 
   integrations:
     minio:
-      endpoint: ${MINIO_URL:http://localhost:9000}
+      internal-endpoint: ${MINIO_INTERNAL_URL:http://localhost:9000}
+      public-endpoint: ${MINIO_PUBLIC_URL:http://localhost:9000}
       access-key: ${MINIO_ACCESS_KEY:minioadmin}
       secret-key: ${MINIO_SECRET_KEY:minioadmin}
       bucket-name: imagens

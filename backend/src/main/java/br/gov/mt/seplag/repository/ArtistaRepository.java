@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface ArtistaRepository extends BaseRepository<Artista, Long> {
 
     @Query("""
-            select a
-            from Artista a
-            where (:nome is null or lower(a.nome) like :nome)
+            SELECT a
+            FROM Artista a
+            WHERE (:nome IS NULL OR lower(a.nome) LIKE :nome)
         """)
     Page<Artista> findAll(final String nome, final Pageable pageable);
 

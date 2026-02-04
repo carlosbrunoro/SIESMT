@@ -1,5 +1,6 @@
 package br.gov.mt.seplag.service.album.imagem;
 
+import br.gov.mt.seplag.core.exception.DomainException;
 import br.gov.mt.seplag.entity.Album;
 import br.gov.mt.seplag.entity.Arquivo;
 import br.gov.mt.seplag.entity.ImagemAlbum;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Service
@@ -25,6 +27,10 @@ public class ImagemAlbumService {
 
     @Transactional
     public void salvarCapas(final Album album, final MultipartFile[] files) {
+        if (isNull(files) || files.length == 0) {
+            throw DomainException.validation("business.file.empty");
+        }
+
         for (final MultipartFile file : files) {
             final Arquivo arquivo = arquivoService.uploadArquivo(file);
 

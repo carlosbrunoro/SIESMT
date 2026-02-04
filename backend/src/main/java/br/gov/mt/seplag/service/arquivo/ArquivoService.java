@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
 @Service
 public class ArquivoService {
@@ -25,7 +26,11 @@ public class ArquivoService {
 
     @Transactional
     public Arquivo uploadArquivo(final MultipartFile file) {
-        if (isNull(file) || file.isEmpty()) {
+        final Boolean arquivoVazio = ofNullable(file)
+            .map(MultipartFile::isEmpty)
+            .orElse(true);
+
+        if (isTrue(arquivoVazio)) {
             throw DomainException.validation("business.file.empty");
         }
 

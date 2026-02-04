@@ -9,12 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ArquivoServiceTest {
@@ -38,8 +37,7 @@ class ArquivoServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoArquivoForVazio() {
-        final MultipartFile file = mock(MultipartFile.class);
-        when(file.isEmpty()).thenReturn(true);
+        final MultipartFile file = new MockMultipartFile("file", new byte[0]);
 
         assertThrows(DomainException.class, () -> service.uploadArquivo(file));
 

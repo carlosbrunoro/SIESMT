@@ -1,6 +1,7 @@
 package br.gov.mt.seplag.core.config;
 
 import br.gov.mt.seplag.core.config.properties.JwtProperties;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -104,7 +105,7 @@ public class SecurityConfig {
     public JwtEncoder jwtEncoder(final SecretKey jwtSigningKey) {
         final OctetSequenceKey jwk = new OctetSequenceKey.Builder(jwtSigningKey)
             .keyID("HS256-key")
-            .algorithm(com.nimbusds.jose.JWSAlgorithm.HS256)
+            .algorithm(JWSAlgorithm.HS256)
             .build();
 
         final JWKSet jwkSet = new JWKSet(jwk);

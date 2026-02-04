@@ -60,25 +60,19 @@ foco em:
 - OpenAPI / Swagger
 - JPA / Hibernate
 
-## Requisitos
+## Como Executar o Projeto
 
-Antes de rodar a aplicação localmente, tenha instalado:
+A aplicação está totalmente conteinerizada, facilitando a execução sem a necessidade de instalar Java ou Maven localmente.
 
+### Requisitos
 - Docker
 - Docker Compose
 - Maven (necessário caso queira recompilar a aplicação)
 
-> Observação: Maven e JDK 21 são necessários apenas caso seja preciso recompilar a aplicação.
-> O projeto já disponibiliza o artefato `app.jar`.
-
-## Execução rápida (ambiente de desenvolvimento)
-A aplicação está totalmente empacotada em containers Docker.
-
-Na raiz do projeto, execute:
-
-```bash
-docker compose up -d
-```
+### Execução
+1. Na raiz do projeto, suba o ecossistema completo:
+   ```bash
+   docker-compose up -d --build
 
 ## Configuração
 

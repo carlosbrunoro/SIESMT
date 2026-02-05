@@ -94,7 +94,7 @@ public class MinioStorageIntegrator implements StorageIntegrator {
     }
 
     @Override
-    public String gerarLinkDownload(final String key) {
+    public String gerarLinkDownloadPreAssinado(final String key) {
         final var minio = applicationProperties.getIntegrations().getMinio();
 
         final String bucketName = minio.getBucketName();

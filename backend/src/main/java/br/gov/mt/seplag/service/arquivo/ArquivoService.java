@@ -73,6 +73,12 @@ public class ArquivoService {
         return new ArquivoDownloadResponse(dados, arquivo.getNomeOriginal(), arquivo.getTipoMime());
     }
 
+    @Transactional(readOnly = true)
+    public String gerarLinkPreAssinado(final Long idArquivo) {
+        final Arquivo arquivo = findById(idArquivo);
+        return storageIntegrator.gerarLinkDownloadPreAssinado(arquivo.getStorageKey());
+    }
+
     private Arquivo findById(final Long id) {
         return arquivoRepository.findById(id).orElseThrow(() ->
             DomainException.notFound("validation.entity.not.found", RESOURCE_ARQUIVO, id)

@@ -8,7 +8,7 @@ import br.gov.mt.seplag.dto.base.PageResponse;
 import br.gov.mt.seplag.entity.Album;
 import br.gov.mt.seplag.mapper.AlbumMapper;
 import br.gov.mt.seplag.service.album.AlbumService;
-import br.gov.mt.seplag.service.arquivo.StorageIntegrator;
+import br.gov.mt.seplag.service.arquivo.ArquivoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -33,16 +33,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class AlbumController {
 
     private final AlbumService albumService;
-    private final StorageIntegrator storageIntegrator;
+    private final ArquivoService arquivoService;
     private final PageableFactory pageableFactory;
     private final AlbumMapper mapper;
 
     public AlbumController(final AlbumService albumService,
-                           final StorageIntegrator storageIntegrator,
+                           final ArquivoService arquivoService,
                            final PageableFactory pageableFactory,
                            final AlbumMapper mapper) {
         this.albumService = albumService;
-        this.storageIntegrator = storageIntegrator;
+        this.arquivoService = arquivoService;
         this.pageableFactory = pageableFactory;
         this.mapper = mapper;
     }
@@ -146,7 +146,7 @@ public class AlbumController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/arquivos/{key}/link-pre-assinado")
+    @GetMapping("/capas/{idImagem}/link-pre-assinado")
     @Operation(
         summary = "Gerar link pré-assinado para acesso à imagem",
         description = """
@@ -159,8 +159,8 @@ public class AlbumController {
             Após o prazo de expiração, o link torna-se inválido automaticamente.
             """
     )
-    public ResponseEntity<String> gerarLinkDownload(@PathVariable final String key) {
-        final String url = storageIntegrator.gerarLinkDownload(key);
+    public ResponseEntity<String> gerarLinkDownload(@PathVariable final Long idImagem) {
+        final String url = arquivoService.gerarLinkPreAssinado(idImagem);
         return ResponseEntity.ok(url);
     }
 

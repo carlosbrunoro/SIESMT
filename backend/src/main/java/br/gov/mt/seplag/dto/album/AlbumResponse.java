@@ -60,7 +60,6 @@ public class AlbumResponse {
         @NoArgsConstructor
         public static class ArquivoResponse {
             private Long id;
-            private String storageKey;
             private String nomeOriginal;
             private String tipoMime;
             private Long tamanho;

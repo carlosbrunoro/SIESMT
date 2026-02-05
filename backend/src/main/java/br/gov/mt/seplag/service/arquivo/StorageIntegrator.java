@@ -10,7 +10,7 @@ public interface StorageIntegrator {
 
     void delete(final String key);
 
-    String gerarLinkDownload(final String key);
+    String gerarLinkDownloadPreAssinado(final String key);
 
 }
 

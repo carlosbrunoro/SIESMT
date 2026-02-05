@@ -1,5 +1,6 @@
 package br.gov.mt.seplag;
 
+import br.gov.mt.seplag.core.exception.DomainException;
 import br.gov.mt.seplag.entity.Album;
 import br.gov.mt.seplag.entity.Arquivo;
 import br.gov.mt.seplag.entity.ImagemAlbum;
@@ -40,6 +41,9 @@ class ImagemAlbumServiceTest {
         final MultipartFile file2 = mock(MultipartFile.class);
         final MultipartFile[] files = {file1, file2};
 
+        when(file1.getContentType()).thenReturn("image/jpeg");
+        when(file2.getContentType()).thenReturn("image/png");
+
         final Arquivo arquivo = new Arquivo();
 
         when(arquivoService.uploadArquivo(any(MultipartFile.class))).thenReturn(arquivo);
@@ -62,6 +66,8 @@ class ImagemAlbumServiceTest {
         final MultipartFile file = mock(MultipartFile.class);
         final MultipartFile[] files = {file};
 
+        when(file.getContentType()).thenReturn("image/jpeg");
+
         final Arquivo arquivo = new Arquivo();
 
         when(arquivoService.uploadArquivo(any(MultipartFile.class)))
@@ -78,6 +84,25 @@ class ImagemAlbumServiceTest {
 
         verify(repository)
             .save(any(ImagemAlbum.class));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoArquivoNaoForImagem() {
+        final Album album = new Album();
+
+        final MultipartFile file = mock(MultipartFile.class);
+        final MultipartFile[] files = {file};
+
+        when(file.getContentType()).thenReturn("application/pdf");
+
+        assertThrows(DomainException.class,
+            () -> service.salvarCapas(album, files));
+
+        verify(arquivoService, never())
+            .uploadArquivo(any());
+
+        verify(repository, never())
+            .save(any());
     }
 
 }

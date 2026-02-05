@@ -62,7 +62,7 @@ foco em:
 
 ## Como Executar o Projeto
 
-A aplicação está totalmente conteinerizada, facilitando a execução sem a necessidade de instalar Java ou Maven localmente.
+A aplicação está totalmente containerizada, facilitando a execução sem a necessidade de instalar Java ou Maven localmente.
 
 ### Requisitos
 - Docker
@@ -71,21 +71,23 @@ A aplicação está totalmente conteinerizada, facilitando a execução sem a ne
 
 ### Execução
 1. Na raiz do projeto, suba o ecossistema completo:
+
    ```bash
    docker-compose up -d --build
 
 ## Configuração
 
-As propriedades principais da aplicação estão em:
+As principais propriedades da aplicação estão centralizadas no arquivo:
 
 - `backend/src/main/resources/application.yml`
-- `backend/src/main/resources/application-staging.yml`
 
-Aqui você pode controlar (entre outros):
+O projeto foi preparado para suportar múltiplos ambientes (como *staging* e *produção*), utilizando arquivos de configuração por perfil, conforme o padrão do Spring Boot.
+
+Nesses arquivos é possível controlar, entre outros aspectos:
 
 - Conexão com o banco de dados
 - Propriedades de segurança e JWT
-- Configurações do scheduler
+- Configurações de tarefas agendadas (scheduler)
 
 Exemplo de configuração do scheduler presente no projeto:
 
@@ -111,21 +113,20 @@ Observações importantes:
 - O access token possui tempo de expiração curto (5 minutos) conforme os requisitos do projeto.
 - O fluxo de renovação (refresh token) está implementado para demonstrar a troca de tokens sem reautenticação completa.
 
-## Endpoints (documentação)
+## Endpoints (documentação e testes)
 
-A API possui documentação OpenAPI/Swagger. Quando a aplicação estiver rodando localmente, acesse a URL do Swagger (
-geralmente algo como `http://localhost:8080/swagger-ui.html` ou `/swagger-ui/index.html`) para ver rotas, modelos e
-testar endpoints.
+A API possui documentação OpenAPI/Swagger, utilizada para **consulta dos endpoints**, **visualização dos modelos de dados** e **execução de testes manuais das requisições**.
 
-> Observação: o caminho exato depende das configurações do projeto e do contexto (server.port, context-path, etc.).
+Quando a aplicação estiver rodando localmente, o Swagger UI pode ser acessado em:
+
+http://localhost:8080/swagger-ui/index.html
+
 
 ## MinIO Local (Servidor de Objetos)
 
 Este projeto utiliza o **MinIO** como storage de arquivos, compatível com S3.
 
----
-
-## Acessando a interface web
+### Acessando a interface web
 
 - URL: [http://localhost:9001/login](http://localhost:9001/login)
 - Login / Senha:

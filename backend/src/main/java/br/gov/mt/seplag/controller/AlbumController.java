@@ -137,7 +137,7 @@ public class AlbumController {
     )
     @Operation(
         summary = "Adicionar capas ao álbum",
-        description = "Realiza o upload de uma ou mais imagens e associa as capas ao álbum informado."
+        description = "Realiza o upload de uma ou mais imagens (PNG, JPG ou JPEG) e associa as capas ao álbum informado."
     )
     public ResponseEntity<Void> adicionarCapasAlbum(@PathVariable final Long idAlbum,
                                                     @RequestPart("files") final MultipartFile[] files) throws DomainException {

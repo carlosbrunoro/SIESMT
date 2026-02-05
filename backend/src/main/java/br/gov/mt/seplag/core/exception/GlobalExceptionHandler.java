@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -235,6 +236,24 @@ public class GlobalExceptionHandler {
         ));
 
         log.warn("Multipart request expected but not received at {}: {}", path, ex.getMessage());
+
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceeded(final MaxUploadSizeExceededException ex,
+                                                                     final WebRequest request) {
+        final String path = getPathFromRequest(request);
+
+        final ErrorResponse errorResponse = ErrorResponse.of(
+            HttpStatus.BAD_REQUEST.value(),
+            messageService.toLocale("error.badrequest.title"),
+            messageService.toLocale("error.multipart.max-size-exceeded"),
+            path,
+            "MAX_UPLOAD_SIZE_EXCEEDED"
+        );
+
+        log.warn("Upload excedeu o tamanho máximo permitido em {}: {}", path, ex.getMessage());
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
